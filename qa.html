@@ -97,8 +97,10 @@ function bl(){
 }
 
 function sc2(){
-  var msg=encodeURIComponent('Hallo! Ich interessiere mich für eine Immobilien-Beratung. Am besten erreichbar: '+tm);
-  document.getElementById('cd').innerHTML='<div style="display:flex;flex-direction:column;gap:15px;padding-top:10px;"><a href="https://wa.me/4915174424188?text='+msg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a><a href="mailto:ihr.immobilien.partner@gmail.com?subject=Anfrage%3A%20Immobilien-Beratung&body=Hallo%2C%0A%0Aich%20interessiere%20mich%20f%C3%BCr%20eine%20pers%C3%B6nliche%20Immobilien-Beratung.%0A%0AAm%20besten%20k%C3%B6nnt%20ihr%20mich%20erreichen%3A%20ZEIT%0A%0AMit%20freundlichen%20Gr%C3%BC%C3%9Fen" class="cb"><div class="ic"><svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div class="tw"><span class="bt">E-Mail</span></div></a></div>';
+  var wMsg=encodeURIComponent('Hallo! Ich interessiere mich für eine Immobilien-Beratung. Am besten erreichbar: '+tm);
+  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
+  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nAm besten könnt ihr mich erreichen: '+tm+'\n\nMit freundlichen Grüßen');
+  document.getElementById('cd').innerHTML='<div style="display:flex;flex-direction:column;gap:15px;padding-top:10px;"><a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a><a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic"><svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div class="tw"><span class="bt">E-Mail</span></div></a></div>';
 }
 
 function hi(){var v=parseInt(document.getElementById('inc').value);if(v<1600){bl();return;}cur++;render();}
@@ -106,10 +108,7 @@ function hi(){var v=parseInt(document.getElementById('inc').value);if(v<1600){bl
 function hc(i,correct){
   document.querySelectorAll('.o').forEach(function(o){o.classList.remove('sl');});
   document.getElementById('o'+i).classList.add('sl');
-  setTimeout(function(){
-    if(i!==correct){bl();return;}
-    cur++;render();
-  },300);
+  setTimeout(function(){if(i!==correct){bl();return;}cur++;render();},300);
 }
 
 function ht(val,i){
