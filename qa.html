@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+@keyframes fl{from{width:0%;}to{width:100%;}}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100%;background:#14342f;}
+body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px 0 40px 0;gap:15px;}
+.ht{color:#EAF9E1;font-size:24px;font-weight:800;margin-bottom:10px;text-align:center;letter-spacing:0.5px;}
+.si{display:flex;gap:8px;margin-bottom:1.75rem;justify-content:center;}
+.sd{width:8px;height:8px;border-radius:50%;background:rgba(234,249,225,0.2);transition:all 0.3s;}
+.sd.ac{background:#EAF9E1;transform:scale(1.2);}
+.sd.dn{background:#083028;border:2px solid #EAF9E1;}
+.qu{font-size:16px;font-weight:700;color:#EAF9E1;line-height:1.5;margin-bottom:1.5rem;text-align:center;padding:0 10px;}
+.qi{width:95%;max-width:500px;}
+.iw{position:relative;margin-bottom:15px;width:100%;}
+.ei{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:1rem 1rem 1rem 2.75rem;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#083028;outline:none;height:80px;}
+.es{position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);color:#083028;font-size:20px;font-weight:700;pointer-events:none;}
+.op{display:flex;flex-direction:column;gap:15px;margin-bottom:15px;width:100%;}
+.o{display:flex;align-items:center;background:#EAF9E1;border:none;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
+.o:active{transform:scale(0.98);}
+.o.sl{background:#c8e6c0;}
+.oc{position:absolute;left:6%;width:32px;height:32px;border-radius:50%;border:2px solid #083028;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.o.sl .oc{background:#083028;}
+.ok{width:10px;height:10px;border-radius:50%;background:#EAF9E1;opacity:0;transition:opacity 0.2s;}
+.o.sl .ok{opacity:1;}
+.ot{font-size:20px;font-weight:700;color:#083028;width:100%;text-align:center;padding-left:10%;}
+.bn{background:#EAF9E1;color:#083028;border:none;border-radius:60px;width:100%;height:80px;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:transform 0.1s ease;margin-top:5px;display:flex;align-items:center;position:relative;}
+.bn:active{transform:scale(0.98);}
+.bn:disabled{opacity:0.3;cursor:not-allowed;}
+.bn .ic{position:absolute;left:6%;display:flex;align-items:center;justify-content:center;}
+.bn .tw{flex-grow:1;display:flex;justify-content:center;padding-left:10%;}
+.cb{background:#EAF9E1;width:100%;height:80px;border:none;border-radius:60px;display:flex;align-items:center;text-decoration:none;position:relative;transition:transform 0.1s ease;margin-top:15px;}
+.cb:active{transform:scale(0.98);}
+.cb .ic{position:absolute;left:6%;display:flex;align-items:center;justify-content:center;}
+.cb .tw{flex-grow:1;display:flex;justify-content:center;padding-left:10%;}
+.cb .bt{color:#083028;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;white-space:nowrap;}
+.mi{fill:#083028;}
+</style>
+</head>
+<body>
+<div class="ht">Ihr Immobilien Partner</div>
+<div class="qi" id="cd">
+  <div class="si">
+    <div class="sd ac" id="d1"></div>
+    <div class="sd" id="d2"></div>
+    <div class="sd" id="d3"></div>
+    <div class="sd" id="d4"></div>
+  </div>
+  <div id="ct"></div>
+</div>
+<script>
+var qs=[
+  {type:'input',text:'Wie hoch ist dein monatliches Nettoeinkommen?',min:1600},
+  {type:'choice',text:'Möchtest du finanziell unabhängig werden?',options:['Ja, das ist mein Ziel','Nein, nicht wirklich'],correct:0},
+  {type:'choice',text:'Bist du bereit für eine persönliche Beratung?',options:['Ja, ich bin bereit','Nein, noch nicht'],correct:0},
+  {type:'time',text:'Wann kann man dich am besten erreichen?',options:['Vormittags','Nachmittags','Abends']}
+];
+var cur=0,tm='';
+
+function sc(n,v,d){var e=new Date();e.setTime(e.getTime()+(d*24*60*60*1000));document.cookie=n+'='+v+';expires='+e.toUTCString()+';path=/';}
+function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(na)===0)return c.substring(na.length);}return '';}
+
+function dots(){
+  ['d1','d2','d3','d4'].forEach(function(id,i){
+    var d=document.getElementById(id);
+    d.className='sd';
+    if(i<cur)d.classList.add('dn');
+    else if(i===cur)d.classList.add('ac');
+  });
+}
+
+function render(){
+  dots();
+  var q=qs[cur];
+  var c=document.getElementById('ct');
+  if(q.type==='input'){
+    c.innerHTML='<div class="qu">'+q.text+'</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div><button class="bn" id="nb" onclick="hi()" disabled><div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div><div class="tw">Weiter</div></button>';
+    document.getElementById('inc').addEventListener('input',function(){document.getElementById('nb').disabled=!this.value;});
+  } else if(q.type==='choice'){
+    var opts=q.options.map(function(o,i){return '<div class="o" id="o'+i+'" onclick="hc('+i+','+q.correct+')"><div class="oc"><div class="ok"></div></div><span class="ot">'+o+'</span></div>';}).join('');
+    c.innerHTML='<div class="qu">'+q.text+'</div><div class="op">'+opts+'</div>';
+  } else if(q.type==='time'){
+    var opts=q.options.map(function(o,i){return '<div class="o" id="o'+i+'" onclick="ht(\''+o+'\','+i+')"><div class="oc"><div class="ok"></div></div><span class="ot">'+o+'</span></div>';}).join('');
+    c.innerHTML='<div class="qu">'+q.text+'</div><div class="op">'+opts+'</div>';
+  }
+}
+
+function bl(){
+  sc('iip_blocked','1',3650);
+  localStorage.setItem('iip_blocked','1');
+  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang dauerhaft gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">Du erfüllst leider nicht die Voraussetzungen für unsere Beratung. Der Zugang wurde dauerhaft gesperrt.</div></div>';
+}
+
+function sc2(){
+  var msg=encodeURIComponent('Hallo! Ich interessiere mich für eine Immobilien-Beratung. Am besten erreichbar: '+tm);
+  document.getElementById('cd').innerHTML='<div style="display:flex;flex-direction:column;gap:15px;padding-top:10px;"><a href="https://wa.me/4915174424188?text='+msg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a><a href="mailto:ihr.immobilien.partner@gmail.com" class="cb"><div class="ic"><svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div class="tw"><span class="bt">E-Mail</span></div></a></div>';
+}
+
+function hi(){var v=parseInt(document.getElementById('inc').value);if(v<1600){bl();return;}cur++;render();}
+
+function hc(i,correct){
+  document.querySelectorAll('.o').forEach(function(o){o.classList.remove('sl');});
+  document.getElementById('o'+i).classList.add('sl');
+  setTimeout(function(){
+    if(i!==correct){bl();return;}
+    cur++;render();
+  },300);
+}
+
+function ht(val,i){
+  tm=val;
+  document.querySelectorAll('.o').forEach(function(o){o.classList.remove('sl');});
+  document.getElementById('o'+i).classList.add('sl');
+  setTimeout(function(){
+    document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Willkommen!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;">Du wirst in Kürze weitergeleitet...</div><div style="width:90%;max-width:400px;height:4px;background:rgba(234,249,225,0.15);border-radius:60px;overflow:hidden;"><div style="height:100%;background:#EAF9E1;border-radius:60px;animation:fl 2s linear forwards;"></div></div></div>';
+    setTimeout(function(){sc2();},2000);
+  },300);
+}
+
+if(gc('iip_blocked')==='1'||localStorage.getItem('iip_blocked')==='1'){bl();}else{render();}
+</script>
+</body>
+</html>
