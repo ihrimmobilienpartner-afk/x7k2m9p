@@ -20,7 +20,9 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .pb-wrap{width:95%;max-width:500px;margin-bottom:8px;}
 .pb-track{width:100%;height:4px;background:rgba(234,249,225,0.12);border-radius:60px;overflow:hidden;}
 .pb-fill{height:100%;background:#EAF9E1;border-radius:60px;transition:width 0.4s cubic-bezier(0.25,0.46,0.45,0.94);}
+.pb-fill.red{background:#ff6b6b;}
 .pb-label{font-size:11px;font-weight:600;color:rgba(234,249,225,0.4);text-align:right;margin-top:4px;letter-spacing:0.06em;}
+.pb-label.red{color:rgba(255,107,107,0.7);}
 .qi{width:95%;max-width:500px;overflow:hidden;}
 .step{animation:sIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both;}
 .step.out{animation:sOut 0.22s cubic-bezier(0.55,0,1,0.45) both;}
@@ -34,8 +36,6 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .fi::placeholder{color:rgba(8,48,40,0.35);font-weight:500;}
 .fi:focus{border-color:rgba(8,48,40,0.3);}
 .fi.ev{background:#ffe0e0;border-color:#ffaaaa;}
-
-/* Phone field */
 .ph-wrap{position:relative;margin-bottom:15px;width:100%;}
 .ph-prefix{position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:rgba(8,48,40,0.35);pointer-events:none;z-index:1;transition:color 0.2s;}
 .ph-wrap.active .ph-prefix{color:#083028;}
@@ -43,7 +43,6 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .ph-input:focus{border-color:rgba(8,48,40,0.3);}
 .ph-input.ev{background:#ffe0e0;border-color:#ffaaaa;}
 .ph-hint{font-size:11px;font-weight:600;color:rgba(234,249,225,0.35);padding-left:1.5rem;margin-top:-10px;margin-bottom:15px;display:block;}
-
 .op{display:flex;flex-direction:column;gap:15px;margin-bottom:15px;width:100%;}
 .op.sUp{animation:sUp 0.3s ease both;}
 .o{display:flex;align-items:center;background:#EAF9E1;border:2px solid transparent;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
@@ -115,43 +114,60 @@ function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
 function isName(v){return /^[a-zA-ZäöüÄÖÜß\s\-']{2,}$/.test(v);}
 
 function cleanDigits(v){
-  v=v.replace(/^\+49/,'').replace(/^49/,'').replace(/[^\d]/g,'');
+  v=v.replace(/^\+49/,'').replace(/^49/,'').replace(/^0/,'').replace(/[^\d]/g,'');
   return v.substring(0,MAX_DIGITS);
+}
+
+function setPb(pct,label,isRed){
+  var fill=document.getElementById('pbf');
+  var lbl=document.getElementById('pbl');
+  fill.style.width=pct;
+  fill.className='pb-fill'+(isRed?' red':'');
+  lbl.textContent=label;
+  lbl.className='pb-label'+(isRed?' red':'');
+}
+
+function arw(){return '<div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div>';}
+function mlico(){return '<svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';}
+
+function go(html,fn){
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){
+    old.classList.add('out');
+    setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';if(fn)fn();},200);
+  } else {
+    ct.innerHTML='<div class="step">'+html+'</div>';if(fn)fn();
+  }
 }
 
 function initPhone(){
   var wrap=document.getElementById('phwrap');
   var inp=document.getElementById('ph');
   if(!wrap||!inp)return;
-
   inp.addEventListener('focus',function(){wrap.classList.add('active');});
   inp.addEventListener('blur',function(){if(!inp.value)wrap.classList.remove('active');});
-
   inp.addEventListener('keydown',function(e){
     if(e.key==='Backspace'&&inp.value==='')e.preventDefault();
     if(/^[a-zA-Z]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey)e.preventDefault();
   });
-
   inp.addEventListener('input',function(){
-    var raw=inp.value;
-    var digits=cleanDigits(raw);
+    var digits=cleanDigits(inp.value);
     inp.value=digits;
     wrap.classList.toggle('active',digits.length>0);
     var full=PREFIX+digits;
-    var len=digits.length;
-    inp.classList.toggle('ev',len>0&&len<MIN_DIGITS);
-    if(len>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
-    if(len===0){
+    inp.classList.toggle('ev',digits.length>0&&digits.length<MIN_DIGITS);
+    if(digits.length>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
+    if(digits.length===0){
       document.getElementById('ctslide').innerHTML='';
       document.getElementById('ctslide').classList.add('hidden');
       document.getElementById('tmslide').innerHTML='';
       document.getElementById('tmslide').classList.add('hidden');
       ld.contact='';ld.time='';
     }
-    ld.phone=len>=MIN_DIGITS?full:'';
+    ld.phone=digits.length>=MIN_DIGITS?full:'';
     chk3();
   });
-
   inp.addEventListener('paste',function(e){
     e.preventDefault();
     var pasted=(e.clipboardData||window.clipboardData).getData('text');
@@ -161,30 +177,10 @@ function initPhone(){
   });
 }
 
-function arw(){return '<div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div>';}
-function mlico(){return '<svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';}
-
-function pb(i){
-  var labels=['Schritt 1 von 3','Schritt 2 von 3','Schritt 3 von 3'];
-  var pcts=['33%','66%','100%'];
-  document.getElementById('pbf').style.width=pcts[i];
-  document.getElementById('pbl').textContent=labels[i];
-}
-
-function go(html,fn){
-  var ct=document.getElementById('ct');
-  var old=ct.firstElementChild;
-  if(old){
-    old.classList.add('out');
-    setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';pb(cur);if(fn)fn();},200);
-  } else {
-    ct.innerHTML='<div class="step">'+html+'</div>';pb(cur);if(fn)fn();
-  }
-}
-
 function render(){
   dgv=false;
   if(cur===0){
+    setPb('33%','Schritt 1 von 3',false);
     go('<div class="qu">Wie hoch ist dein monatliches Nettoeinkommen?</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div><button class="bn" id="nb" onclick="hi()" disabled>'+arw()+'<div class="tw">Weiter</div></button>',
     function(){
       var inc=document.getElementById('inc');
@@ -193,6 +189,7 @@ function render(){
       inc.focus();
     });
   } else if(cur===1){
+    setPb('66%','Schritt 2 von 3',false);
     go('<div class="qu">Wie heißt du?</div><div class="tl">Vorname</div><input class="fi" type="text" id="fn" placeholder="Max" autocomplete="given-name"><div class="tl">Nachname</div><input class="fi" type="text" id="ln" placeholder="Mustermann" autocomplete="family-name"><div class="em" id="er1">Bitte Vor- und Nachname eingeben (nur Buchstaben).</div><button class="bn" id="nb" onclick="hn()" disabled>'+arw()+'<div class="tw">Weiter</div></button>',
     function(){
       function chk(){document.getElementById('nb').disabled=!(isName(document.getElementById('fn').value.trim())&&isName(document.getElementById('ln').value.trim()));}
@@ -203,13 +200,11 @@ function render(){
       document.getElementById('fn').focus();
     });
   } else if(cur===2){
+    setPb('100%','Schritt 3 von 3',false);
     go(
       '<div class="qu">Wie können wir dich erreichen?</div>'+
       '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
-      '<div class="ph-wrap" id="phwrap">'+
-        '<span class="ph-prefix">+49</span>'+
-        '<input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric">'+
-      '</div>'+
+      '<div class="ph-wrap" id="phwrap"><span class="ph-prefix">+49</span><input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric"></div>'+
       '<span class="ph-hint">+49 · max. '+MAX_DIGITS+' Ziffern</span>'+
       '<div id="ctslide" class="hidden"></div>'+
       '<div id="tmslide" class="hidden"></div>'+
@@ -224,7 +219,7 @@ function render(){
       document.getElementById('em').addEventListener('input',chk3);
       document.getElementById('em').addEventListener('keydown',function(e){
         if(e.key==='Enter'){
-          if(document.getElementById('ph').value.trim()&&ld.contact==='Anruf'&&!ld.time){shakeTime();return;}
+          if(ld.phone&&ld.contact==='Anruf'&&!ld.time){shakeTime();return;}
           if(!document.getElementById('nb').disabled)hs();
         }
       });
@@ -290,13 +285,15 @@ function chk3(){
 }
 
 function bl(reason){
-  sc('iip_blocked','1',3650);ss('iip_blocked','1');
+  sc('iip_blocked','1',3650);
+  ss('iip_blocked','1');
   if(fpId)ss('iip_fp_bl',fpId);
+  setPb('100%','Zugang verweigert',true);
   var msg=reason||'Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt.';
   var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">'+msg+'</div></div>';
   var ct=document.getElementById('ct');
   var old=ct.firstElementChild;
-  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';document.getElementById('pbf').style.width='100%';document.getElementById('pbl').textContent='';},200);}
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
   else{ct.innerHTML='<div class="step">'+html+'</div>';}
 }
 
@@ -309,6 +306,7 @@ function waiting(){
 }
 
 function showDone(){
+  setPb('100%','Fertig!',false);
   var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(ld.time&&ld.time!=='—'?' Am besten erreichbar: '+ld.time:''));
   var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
   var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt: '+ld.contact:'')+(ld.time&&ld.time!=='—'?'\nErreichbar: '+ld.time:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
@@ -318,7 +316,7 @@ function showDone(){
   var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank'+(ld.fn?', '+ld.fn:'')+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
   var ct=document.getElementById('ct');
   var old=ct.firstElementChild;
-  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';document.getElementById('pbf').style.width='100%';document.getElementById('pbl').textContent='Fertig!';},200);}
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
   else{ct.innerHTML='<div class="step">'+html+'</div>';}
 }
 
@@ -335,7 +333,8 @@ function hi(){
 }
 
 function hn(){
-  var f=document.getElementById('fn').value.trim();var l=document.getElementById('ln').value.trim();
+  var f=document.getElementById('fn').value.trim();
+  var l=document.getElementById('ln').value.trim();
   if(!isName(f)||!isName(l)){document.getElementById('er1').style.display='block';return;}
   ld.fn=f;ld.ln=l;cur++;render();
 }
@@ -347,7 +346,8 @@ function hs(){
   if(ld.phone&&ld.contact==='Anruf'&&(!ld.time||ld.time==='—')){shakeTime();document.getElementById('er2').style.display='block';return;}
   if(!dgv){document.getElementById('er2').style.display='block';return;}
   ld.email=em;sent=true;
-  ss('iip_sent','1');if(fpId)ss('iip_fp_sent',fpId);
+  ss('iip_sent','1');
+  if(fpId)ss('iip_fp_sent',fpId);
   waiting();
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
 }
