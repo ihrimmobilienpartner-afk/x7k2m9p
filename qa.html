@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IP</title>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
-@keyframes fl{from{width:0%;}to{width:100%;}}
+@keyframes sp{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+@keyframes sd{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100%;background:#14342f;}
 body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px 0 40px 0;gap:15px;}
@@ -20,17 +23,22 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .iw{position:relative;margin-bottom:15px;width:100%;}
 .ei{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:1rem 1rem 1rem 2.75rem;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#083028;outline:none;height:80px;}
 .es{position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);color:#083028;font-size:20px;font-weight:700;pointer-events:none;}
-.fi{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:0 1.5rem;font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#083028;outline:none;height:80px;margin-bottom:15px;}
+.fi{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:0 1.5rem;font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#083028;outline:none;height:80px;margin-bottom:15px;display:block;transition:background 0.2s;}
 .fi::placeholder{color:rgba(8,48,40,0.4);font-weight:500;}
+.fi.ev{background:#ffcccc;}
 .op{display:flex;flex-direction:column;gap:15px;margin-bottom:15px;width:100%;}
+.op.slide{animation:sd 0.3s ease;}
 .o{display:flex;align-items:center;background:#EAF9E1;border:none;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
 .o:active{transform:scale(0.98);}
 .o.sl{background:#c8e6c0;}
+.o.rv{background:#ffcccc;animation:sh 0.4s ease;}
 .oc{position:absolute;left:6%;width:32px;height:32px;border-radius:50%;border:2px solid #083028;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
 .o.sl .oc{background:#083028;}
+.o.rv .oc{border-color:#cc0000;}
 .ok{width:10px;height:10px;border-radius:50%;background:#EAF9E1;opacity:0;transition:opacity 0.2s;}
 .o.sl .ok{opacity:1;}
 .ot{font-size:20px;font-weight:700;color:#083028;width:100%;text-align:center;padding-left:10%;}
+.o.rv .ot{color:#cc0000;}
 .bn{background:#EAF9E1;color:#083028;border:none;border-radius:60px;width:100%;height:80px;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:transform 0.1s ease;margin-top:5px;display:flex;align-items:center;position:relative;}
 .bn:active{transform:scale(0.98);}
 .bn:disabled{opacity:0.3;cursor:not-allowed;}
@@ -43,11 +51,19 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .cb .bt{color:#083028;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;white-space:nowrap;}
 .mi{fill:#083028;}
 .tl{font-size:13px;font-weight:600;color:rgba(234,249,225,0.6);margin-bottom:6px;padding-left:1.5rem;}
-.dg{display:flex;align-items:flex-start;gap:12px;background:rgba(234,249,225,0.06);border-radius:20px;padding:1rem 1.25rem;margin-bottom:15px;cursor:pointer;}
-.dg input[type=checkbox]{width:22px;height:22px;min-width:22px;accent-color:#EAF9E1;cursor:pointer;margin-top:2px;}
-.dg span{font-size:13px;color:rgba(234,249,225,0.7);line-height:1.6;}
-.dg a{color:#EAF9E1;text-decoration:underline;}
-.er{color:#ff6b6b;font-size:12px;text-align:center;margin-bottom:10px;display:none;}
+.or{text-align:center;color:rgba(234,249,225,0.4);font-size:14px;font-weight:600;margin:5px 0;}
+.dg{display:flex;align-items:center;background:#EAF9E1;border:none;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;width:100%;margin-bottom:15px;}
+.dg:active{transform:scale(0.98);}
+.dg.sl{background:#c8e6c0;}
+.dg .oc{position:absolute;left:6%;width:32px;height:32px;border-radius:50%;border:2px solid #083028;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
+.dg.sl .oc{background:#083028;}
+.dg .ok{width:10px;height:10px;border-radius:50%;background:#EAF9E1;opacity:0;transition:opacity 0.2s;}
+.dg.sl .ok{opacity:1;}
+.dg .dt{font-size:12px;font-weight:600;color:#083028;line-height:1.4;padding-left:calc(6% + 48px);padding-right:12px;}
+.dg .dt a{color:#083028;text-decoration:underline;}
+.em{color:#ff6b6b;font-size:12px;text-align:center;margin-bottom:10px;display:none;padding:0 10px;}
+.sp{width:32px;height:32px;border:3px solid rgba(234,249,225,0.3);border-top:3px solid #EAF9E1;border-radius:50%;animation:sp 0.8s linear infinite;}
+.hidden{display:none;}
 </style>
 </head>
 <body>
@@ -61,14 +77,21 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
   <div id="ct"></div>
 </div>
 <script>
-var BOT_TOKEN='8638189052:AAE6nJwMUlosl4sWCTdt5f5ObkMxmSa585s';
-var CHAT_ID='593749298';
-
-var cur=0;
-var ld={income:'',fn:'',ln:'',phone:'',email:'',time:''};
+var p=new URLSearchParams(window.location.search);
+var TK=p.get('t')||'';
+var CI=p.get('c')||'';
+var cur=0,dgv=false,sent=false;
+var ld={income:'',fn:'',ln:'',phone:'',email:'',contact:'',time:''};
+var fpId='';
 
 function sc(n,v,d){var e=new Date();e.setTime(e.getTime()+(d*24*60*60*1000));document.cookie=n+'='+v+';expires='+e.toUTCString()+';path=/';}
 function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(na)===0)return c.substring(na.length);}return '';}
+function ss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function gs(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
+
+function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+function isPhone(v){return /^[+0-9\s\-()]{6,20}$/.test(v);}
+function isName(v){return /^[a-zA-ZäöüÄÖÜß\s\-']{2,}$/.test(v);}
 
 function dots(){
   ['d1','d2','d3'].forEach(function(id,i){
@@ -79,89 +102,199 @@ function dots(){
   });
 }
 
-function nb(fn){
-  return '<button class="bn" id="nb" onclick="'+fn+'" disabled><div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div><div class="tw">Weiter</div></button>';
-}
+function arw(){return '<div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div>';}
+function mlico(){return '<svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';}
 
 function render(){
-  dots();
+  dots();dgv=false;
   var c=document.getElementById('ct');
   if(cur===0){
-    c.innerHTML='<div class="qu">Wie hoch ist dein monatliches Nettoeinkommen?</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div>'+nb('hi()');
-    document.getElementById('inc').addEventListener('input',function(){document.getElementById('nb').disabled=!this.value;});
+    c.innerHTML='<div class="qu">Wie hoch ist dein monatliches Nettoeinkommen?</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div><button class="bn" id="nb" onclick="hi()" disabled>'+arw()+'<div class="tw">Weiter</div></button>';
+    var inc=document.getElementById('inc');
+    inc.addEventListener('input',function(){document.getElementById('nb').disabled=!this.value||parseInt(this.value)<1;});
+    inc.addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hi();});
+    inc.focus();
   } else if(cur===1){
-    c.innerHTML='<div class="qu">Wie heißt du?</div><div class="tl">Vorname</div><input class="fi" type="text" id="fn" placeholder="Max"><div class="tl">Nachname</div><input class="fi" type="text" id="ln" placeholder="Mustermann">'+nb('hn()');
-    function chk(){document.getElementById('nb').disabled=!(document.getElementById('fn').value&&document.getElementById('ln').value);}
+    c.innerHTML='<div class="qu">Wie heißt du?</div><div class="tl">Vorname</div><input class="fi" type="text" id="fn" placeholder="Max" autocomplete="given-name"><div class="tl">Nachname</div><input class="fi" type="text" id="ln" placeholder="Mustermann" autocomplete="family-name"><div class="em" id="er1">Bitte Vor- und Nachname eingeben (nur Buchstaben).</div><button class="bn" id="nb" onclick="hn()" disabled>'+arw()+'<div class="tw">Weiter</div></button>';
+    function chk(){document.getElementById('nb').disabled=!(isName(document.getElementById('fn').value.trim())&&isName(document.getElementById('ln').value.trim()));}
     document.getElementById('fn').addEventListener('input',chk);
     document.getElementById('ln').addEventListener('input',chk);
+    document.getElementById('fn').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ln').focus();});
+    document.getElementById('ln').addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hn();});
+    document.getElementById('fn').focus();
   } else if(cur===2){
-    c.innerHTML='<div class="qu">Wie können wir dich erreichen?</div><div class="tl">Telefon</div><input class="fi" type="tel" id="ph" placeholder="+49..."><div class="tl">E-Mail</div><input class="fi" type="email" id="em" placeholder="deine@email.de"><div class="tl">Wann bist du am besten erreichbar?</div><div class="op"><div class="o" id="o0" onclick="st(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="o1" onclick="st(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="o2" onclick="st(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div><div class="dg" onclick="tg()"><input type="checkbox" id="dsgvo"><span>Ich stimme der Verarbeitung meiner Daten gemäß der <a href="https://www.ihrimmobilienpartner.com/datenschutz" target="_blank" onclick="event.stopPropagation()">Datenschutzerklärung</a> zu. (Art. 6 Abs. 1 lit. a DSGVO)</span></div><div class="er" id="er">Bitte alle Felder ausfüllen und Datenschutz bestätigen.</div><button class="bn" id="nb" onclick="hs()" disabled><div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div><div class="tw">Absenden</div></button>';
-    function chk3(){
-      var ok=document.getElementById('ph').value&&document.getElementById('em').value&&ld.time&&document.getElementById('dsgvo').checked;
-      document.getElementById('nb').disabled=!ok;
-    }
-    document.getElementById('ph').addEventListener('input',chk3);
+    c.innerHTML=
+      '<div class="qu">Wie können wir dich erreichen?</div>'+
+      '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
+      '<input class="fi" type="tel" id="ph" placeholder="+49 123 456789" autocomplete="tel">'+
+      '<div id="ctslide" class="hidden"></div>'+
+      '<div id="tmslide" class="hidden"></div>'+
+      '<div class="or">oder</div>'+
+      '<div class="tl">E-Mail <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
+      '<input class="fi" type="email" id="em" placeholder="deine@email.de" autocomplete="email">'+
+      '<div class="dg" id="dgbtn" onclick="tgDg()"><div class="oc"><div class="ok"></div></div><div class="dt">Ich stimme der Verarbeitung meiner Daten gemäß der <a href="https://www.ihrimmobilienpartner.com/datenschutz" target="_blank" onclick="event.stopPropagation()">Datenschutzerklärung</a> zu. (Art. 6 Abs. 1 lit. a DSGVO)</div></div>'+
+      '<div class="em" id="er2">Bitte mindestens Telefon oder E-Mail angeben, Zeit wählen und Datenschutz bestätigen.</div>'+
+      '<button class="bn" id="nb" onclick="hs()" disabled>'+arw()+'<div class="tw">Absenden</div></button>';
+
+    document.getElementById('ph').addEventListener('input',function(){
+      var v=this.value.trim();
+      if(v.length>2&&!document.getElementById('ctslide').querySelector('.o')){
+        showContactType();
+      }
+      if(v.length===0){
+        document.getElementById('ctslide').innerHTML='';
+        document.getElementById('ctslide').classList.add('hidden');
+        document.getElementById('tmslide').innerHTML='';
+        document.getElementById('tmslide').classList.add('hidden');
+        ld.contact='';ld.time='';
+      }
+      chk3();
+    });
     document.getElementById('em').addEventListener('input',chk3);
+    document.getElementById('ph').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('em').focus();});
+    document.getElementById('em').addEventListener('keydown',function(e){
+      if(e.key==='Enter'){
+        if(!ld.time&&document.getElementById('ph').value.trim()){shakeTime();return;}
+        if(!document.getElementById('nb').disabled)hs();
+      }
+    });
+    document.getElementById('ph').focus();
   }
 }
 
-function tg(){
-  var cb=document.getElementById('dsgvo');
-  cb.checked=!cb.checked;
-  var ok=document.getElementById('ph').value&&document.getElementById('em').value&&ld.time&&cb.checked;
-  document.getElementById('nb').disabled=!ok;
+function showContactType(){
+  var sl=document.getElementById('ctslide');
+  sl.classList.remove('hidden');
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op slide"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
 }
 
-function st(val,i){
+function selCt(val,i){
+  ld.contact=val;
+  document.querySelectorAll('#ctslide .o').forEach(function(o){o.classList.remove('sl');});
+  document.getElementById('ct'+i).classList.add('sl');
+  showTime();
+  chk3();
+}
+
+function showTime(){
+  var sl=document.getElementById('tmslide');
+  if(sl.querySelector('.o'))return;
+  sl.classList.remove('hidden');
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wann bist du am besten erreichbar?</div><div class="op slide"><div class="o" id="tm0" onclick="selTm(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="tm1" onclick="selTm(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="tm2" onclick="selTm(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div>';
+}
+
+function selTm(val,i){
   ld.time=val;
-  document.querySelectorAll('.o').forEach(function(o){o.classList.remove('sl');});
-  document.getElementById('o'+i).classList.add('sl');
-  var ok=document.getElementById('ph').value&&document.getElementById('em').value&&ld.time&&document.getElementById('dsgvo').checked;
-  document.getElementById('nb').disabled=!ok;
+  document.querySelectorAll('#tmslide .o').forEach(function(o){o.classList.remove('sl','rv');});
+  document.getElementById('tm'+i).classList.add('sl');
+  chk3();
+}
+
+function shakeTime(){
+  var opts=document.querySelectorAll('#tmslide .o');
+  if(!opts.length)return;
+  opts.forEach(function(o){
+    o.classList.add('rv');
+    setTimeout(function(){o.classList.remove('rv');},600);
+  });
+}
+
+function tgDg(){
+  dgv=!dgv;
+  var btn=document.getElementById('dgbtn');
+  if(dgv)btn.classList.add('sl');else btn.classList.remove('sl');
+  chk3();
+}
+
+function chk3(){
+  if(!document.getElementById('ph'))return;
+  var phv=document.getElementById('ph').value.trim();
+  var emv=document.getElementById('em').value.trim();
+  document.getElementById('ph').classList.toggle('ev',phv.length>2&&!isPhone(phv));
+  document.getElementById('em').classList.toggle('ev',emv.length>3&&!isEmail(emv));
+  var hasContact=(isPhone(phv))||(isEmail(emv));
+  var needTime=isPhone(phv);
+  var timeOk=!needTime||(ld.time&&ld.contact);
+  document.getElementById('nb').disabled=!(hasContact&&timeOk&&dgv);
 }
 
 function bl(){
   sc('iip_blocked','1',3650);
-  localStorage.setItem('iip_blocked','1');
-  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang dauerhaft gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">Du erfüllst leider nicht die Voraussetzungen für unsere Beratung. Der Zugang wurde dauerhaft gesperrt.</div></div>';
+  ss('iip_blocked','1');
+  if(fpId)ss('iip_fp_bl',fpId);
+  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang dauerhaft gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt.</div></div>';
+}
+
+function showDone(){
+  var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(ld.time?' Am besten erreichbar: '+ld.time:''));
+  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
+  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt per: '+ld.contact:'')+(ld.time?'\nAm besten erreichbar: '+ld.time:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
+  var btns='';
+  if(ld.phone)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
+  if(ld.email)btns+='<a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic">'+mlico()+'</div><div class="tw"><span class="bt">E-Mail</span></div></a>';
+  if(!ld.phone&&!ld.email)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
+  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank, '+ld.fn+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
+}
+
+function waiting(){
+  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:40px;display:flex;flex-direction:column;align-items:center;gap:20px;"><div class="sp"></div><div style="color:#EAF9E1;font-size:20px;font-weight:800;font-family:Manrope,sans-serif;">Deine Anfrage wird gesendet...</div><div style="color:rgba(234,249,225,0.6);font-size:14px;font-family:Manrope,sans-serif;">Bitte einen Moment warten.</div></div>';
 }
 
 function sendTG(){
-  var txt='🏠 Neue Anfrage!\n\n'+'👤 Name: '+ld.fn+' '+ld.ln+'\n'+'💶 Einkommen: €'+ld.income+'\n'+'📞 Telefon: '+ld.phone+'\n'+'📧 E-Mail: '+ld.email+'\n'+'🕐 Erreichbar: '+ld.time;
-  fetch('https://api.telegram.org/bot'+BOT_TOKEN+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:txt})});
-}
-
-function done(){
-  var wMsg=encodeURIComponent('Hallo! Ich interessiere mich für eine Immobilien-Beratung. Am besten erreichbar: '+ld.time);
-  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
-  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+'\nTelefon: '+ld.phone+'\nAm besten erreichbar: '+ld.time+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
-  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;"><a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a><a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic"><svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2,.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div class="tw"><span class="bt">E-Mail</span></div></a></div>';
+  if(!TK||!CI)return Promise.resolve();
+  var txt='🏠 Neue Anfrage!\n\n'+'👤 Name: '+ld.fn+' '+ld.ln+'\n'+'💶 Einkommen: €'+ld.income+(ld.phone?'\n📞 Telefon: '+ld.phone:'')+(ld.email?'\n📧 E-Mail: '+ld.email:'')+(ld.contact?'\n📲 Kontakt per: '+ld.contact:'')+(ld.time?'\n🕐 Erreichbar: '+ld.time:'');
+  return fetch('https://api.telegram.org/bot'+TK+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CI,text:txt})});
 }
 
 function hi(){
   var v=parseInt(document.getElementById('inc').value);
-  if(v<1600){bl();return;}
+  if(!v||v<1600){bl();return;}
   ld.income=v;cur++;render();
 }
 
 function hn(){
-  ld.fn=document.getElementById('fn').value.trim();
-  ld.ln=document.getElementById('ln').value.trim();
-  if(!ld.fn||!ld.ln)return;
-  cur++;render();
+  var f=document.getElementById('fn').value.trim();
+  var l=document.getElementById('ln').value.trim();
+  if(!isName(f)||!isName(l)){document.getElementById('er1').style.display='block';return;}
+  ld.fn=f;ld.ln=l;cur++;render();
 }
 
 function hs(){
-  ld.phone=document.getElementById('ph').value.trim();
-  ld.email=document.getElementById('em').value.trim();
-  if(!ld.phone||!ld.email||!ld.time||!document.getElementById('dsgvo').checked){
-    document.getElementById('er').style.display='block';return;
+  if(sent)return;
+  var ph=document.getElementById('ph').value.trim();
+  var em=document.getElementById('em').value.trim();
+  if(ph&&!isPhone(ph)){document.getElementById('er2').style.display='block';return;}
+  if(em&&!isEmail(em)){document.getElementById('er2').style.display='block';return;}
+  if(!ph&&!em){document.getElementById('er2').style.display='block';return;}
+  if(ph&&(!ld.time||!ld.contact)){
+    shakeTime();
+    document.getElementById('er2').style.display='block';return;
   }
-  sendTG();
-  done();
+  if(!dgv){document.getElementById('er2').style.display='block';return;}
+  ld.phone=ph;ld.email=em;
+  sent=true;
+  ss('iip_sent','1');
+  if(fpId)ss('iip_fp_sent',fpId);
+  waiting();
+  sendTG().then(function(){showDone();}).catch(function(){showDone();});
 }
 
-if(gc('iip_blocked')==='1'||localStorage.getItem('iip_blocked')==='1'){bl();}else{render();}
+FingerprintJS.load().then(function(fp){
+  return fp.get();
+}).then(function(result){
+  fpId=result.visitorId;
+  var blFp=gs('iip_fp_bl');
+  var sentFp=gs('iip_fp_sent');
+  if(blFp&&blFp===fpId){bl();return;}
+  if(sentFp&&sentFp===fpId){showDone();return;}
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl();return;}
+  if(gs('iip_sent')==='1'){showDone();return;}
+  render();
+}).catch(function(){
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl();return;}
+  if(gs('iip_sent')==='1'){showDone();return;}
+  render();
+});
 </script>
 </body>
 </html>
