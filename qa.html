@@ -88,7 +88,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 </style>
 </head>
 <body>
-<div class="ht" id="ht" onclick="htClick()">Ihr Immobilien Partner</div>
+<div class="ht" id="ht">Ihr Immobilien Partner</div>
 <div class="pb-wrap">
   <div class="pb-track"><div class="pb-fill" id="pbf" style="width:33%"></div></div>
   <div class="pb-label" id="pbl">Schritt 1 von 3</div>
@@ -301,13 +301,13 @@ function bl(reason){
   sc('iip_blocked','1',3650);
   ss('iip_blocked','1');
   if(fpId)ss('iip_fp_bl',fpId);
-  setPb('100%','Zugang verweigert',true);
-  var msg=reason||'Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt.';
-  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">'+msg+'</div></div>';
+  var msg=reason||'Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt';
+  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">'+msg+'<span id="rsdot" onclick="htClick()" style="cursor:default;user-select:none;">.</span></div></div>';
   var ct=document.getElementById('ct');
   var old=ct.firstElementChild;
-  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
-  else{ct.innerHTML='<div class="step">'+html+'</div>';}
+  function show(){ct.innerHTML='<div class="step">'+html+'</div>';setPb('100%','Zugang verweigert',true);}
+  if(old){old.classList.add('out');setTimeout(show,200);}
+  else{show();}
 }
 
 function waiting(){
