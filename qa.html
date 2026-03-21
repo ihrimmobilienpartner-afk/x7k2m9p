@@ -342,7 +342,7 @@ function sendTG(){
 
 function hi(){
   var v=parseInt(document.getElementById('inc').value);
-  if(!v||v<1600){bl('Leider erfüllst du die Voraussetzungen für unsere Beratung nicht.');return;}
+  if(!v||v<1600){bl('Leider erfüllst du die Voraussetzungen für unsere Beratung nicht');return;}
   ld.income=v;cur++;render();
 }
 
@@ -369,13 +369,13 @@ function hs(){
 if(gs('iip_owner')==='1'){render();}
 else{FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
   fpId=r.visitorId;
-  if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
+  if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
   if(gs('iip_fp_sent')===fpId){showDone();return;}
-  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
   if(gs('iip_sent')==='1'){showDone();return;}
   render();
 }).catch(function(){
-  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
   if(gs('iip_sent')==='1'){showDone();return;}
   render();
 });}
