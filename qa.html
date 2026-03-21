@@ -126,7 +126,7 @@ function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.l
 function ss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function gs(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
 function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-function isName(v){return /^[a-zA-ZäöüÄÖÜß\s\-']{2,}$/.test(v);}
+function isName(v){return /^[a-zA-ZäöüÄÖÜß\s\-]{2,}$/.test(v);}
 
 function cleanDigits(v){
   v=v.replace(/^\+49/,'').replace(/^49/,'').replace(/^0/,'').replace(/[^\d]/g,'');
@@ -218,7 +218,7 @@ function render(){
     setPb('100%','Schritt 3 von 3',false);
     go(
       '<div class="qu">Wie können wir dich erreichen?</div>'+
-      '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
+      '<div class="tl">Telefon</div>'+
       '<div class="ph-wrap" id="phwrap"><span class="ph-prefix">+49</span><input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric"></div>'+
       
       '<div id="ctslide" class="hidden"></div>'+
@@ -296,7 +296,11 @@ function chk3(){
   document.getElementById('em').classList.toggle('ev',emv.length>3&&!isEmail(emv));
   var hasPhone=ld.phone.length>0;
   var phoneReady=!hasPhone||(ld.contact==='Nachricht'||(ld.contact==='Anruf'&&ld.time&&ld.time!=='—'));
-  document.getElementById('nb').disabled=!(isEmail(emv)&&phoneReady&&dgv);
+  var ok=isEmail(emv)&&phoneReady&&dgv;
+  var nb=document.getElementById('nb');
+  nb.disabled=!ok;
+  if(ok){nb.style.animation='pulse 1.5s infinite';nb.style.background='#EAF9E1';}
+  else{nb.style.animation='none';}
 }
 
 function bl(reason){
@@ -321,6 +325,8 @@ function waiting(){
 }
 
 function showDone(){
+  ss('iip_sent','1');
+  if(fpId)ss('iip_fp_sent',fpId);
   setPb('100%','Fertig!',false);
   var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(ld.time&&ld.time!=='—'?' Am besten erreichbar: '+ld.time:''));
   var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
@@ -361,8 +367,6 @@ function hs(){
   if(ld.phone&&ld.contact==='Anruf'&&(!ld.time||ld.time==='—')){shakeTime();document.getElementById('er2').style.display='block';return;}
   if(!dgv){document.getElementById('er2').style.display='block';return;}
   ld.email=em;sent=true;
-  ss('iip_sent','1');
-  if(fpId)ss('iip_fp_sent',fpId);
   waiting();
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
 }
