@@ -327,8 +327,10 @@ function chk3(){
   var emv=document.getElementById('em').value.trim();
   document.getElementById('em').classList.toggle('ev',emv.length>3&&!isEmail(emv));
   var hasPhone=ld.phone.length>0;
+  var hasEmail=isEmail(emv);
   var phoneReady=!hasPhone||(ld.contact==='Nachricht'||(ld.contact==='Anruf'&&ld.time&&ld.time!=='—'));
-  var ok=isEmail(emv)&&phoneReady&&dgv;
+  var hasContact=hasPhone||hasEmail;
+  var ok=hasContact&&phoneReady&&dgv;
   var nb=document.getElementById('nb');
   if(!nb)return;
   nb.disabled=!ok;
@@ -429,8 +431,9 @@ function hn(){
 function hs(){
   if(sent)return;
   var em=document.getElementById('em').value.trim();
-  if(!isEmail(em)){document.getElementById('er2').style.display='block';return;}
-  if(ld.phone&&ld.contact==='Anruf'&&(!ld.time||ld.time==='—')){shakeTime();document.getElementById('er2').style.display='block';return;}
+  var ph=ld.phone;
+  if(!isEmail(em)&&!ph){document.getElementById('er2').style.display='block';return;}
+  if(ph&&ld.contact==='Anruf'&&(!ld.time||ld.time==='—')){shakeTime();document.getElementById('er2').style.display='block';return;}
   if(!dgv){document.getElementById('er2').style.display='block';return;}
   ld.email=em;sent=true;
   waiting();
