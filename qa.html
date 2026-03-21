@@ -3,77 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP</title>
+<title>Ihr Immobilien Partner</title>
 <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
 @keyframes sp{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 @keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-@keyframes sd{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sIn{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:translateX(0);}}
+@keyframes sOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-60px);}}
+@keyframes sUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(234,249,225,0);}50%{box-shadow:0 0 0 6px rgba(234,249,225,0.15);}}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;min-height:100%;background:#14342f;}
+html,body{width:100%;min-height:100%;background:#14342f;overflow-x:hidden;}
 body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px 0 40px 0;gap:15px;}
-.ht{color:#EAF9E1;font-size:24px;font-weight:800;margin-bottom:10px;text-align:center;letter-spacing:0.5px;}
-.si{display:flex;gap:8px;margin-bottom:1.75rem;justify-content:center;}
-.sd{width:8px;height:8px;border-radius:50%;background:rgba(234,249,225,0.2);transition:all 0.3s;}
-.sd.ac{background:#EAF9E1;transform:scale(1.2);}
-.sd.dn{background:#083028;border:2px solid #EAF9E1;}
+.ht{color:#EAF9E1;font-size:24px;font-weight:800;margin-bottom:6px;text-align:center;letter-spacing:0.5px;}
+.pb-wrap{width:95%;max-width:500px;margin-bottom:8px;}
+.pb-track{width:100%;height:4px;background:rgba(234,249,225,0.12);border-radius:60px;overflow:hidden;}
+.pb-fill{height:100%;background:#EAF9E1;border-radius:60px;transition:width 0.4s cubic-bezier(0.25,0.46,0.45,0.94);}
+.pb-label{font-size:11px;font-weight:600;color:rgba(234,249,225,0.4);text-align:right;margin-top:4px;letter-spacing:0.06em;}
+.qi{width:95%;max-width:500px;overflow:hidden;}
+.step{animation:sIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both;}
+.step.out{animation:sOut 0.22s cubic-bezier(0.55,0,1,0.45) both;}
 .qu{font-size:16px;font-weight:700;color:#EAF9E1;line-height:1.5;margin-bottom:1.5rem;text-align:center;padding:0 10px;}
-.qi{width:95%;max-width:500px;}
 .iw{position:relative;margin-bottom:15px;width:100%;}
-.ei{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:1rem 1rem 1rem 2.75rem;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#083028;outline:none;height:80px;}
+.ei{width:100%;background:#EAF9E1;border:2px solid transparent;border-radius:60px;padding:1rem 1rem 1rem 2.75rem;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#083028;outline:none;height:80px;transition:border-color 0.2s;}
+.ei:focus{border-color:#083028;}
 .es{position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);color:#083028;font-size:20px;font-weight:700;pointer-events:none;}
-.fi{width:100%;background:#EAF9E1;border:none;border-radius:60px;padding:0 1.5rem;font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#083028;outline:none;height:80px;margin-bottom:15px;display:block;transition:background 0.2s;}
-.fi::placeholder{color:rgba(8,48,40,0.4);font-weight:500;}
-.fi.ev{background:#ffcccc;}
+.tl{font-size:13px;font-weight:600;color:rgba(234,249,225,0.6);margin-bottom:6px;padding-left:1.5rem;}
+.fi{width:100%;background:#EAF9E1;border:2px solid transparent;border-radius:60px;padding:0 1.5rem;font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#083028;outline:none;height:80px;margin-bottom:15px;display:block;transition:background 0.2s,border-color 0.2s;}
+.fi::placeholder{color:rgba(8,48,40,0.35);font-weight:500;}
+.fi:focus{border-color:rgba(8,48,40,0.3);}
+.fi.ev{background:#ffe0e0;border-color:#ffaaaa;}
+
+/* Phone field */
+.ph-wrap{position:relative;margin-bottom:15px;width:100%;}
+.ph-prefix{position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:rgba(8,48,40,0.35);pointer-events:none;z-index:1;transition:color 0.2s;}
+.ph-wrap.active .ph-prefix{color:#083028;}
+.ph-input{width:100%;background:#EAF9E1;border:2px solid transparent;border-radius:60px;padding:0 1.5rem 0 4.5rem;font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:#083028;outline:none;height:80px;transition:background 0.2s,border-color 0.2s;}
+.ph-input:focus{border-color:rgba(8,48,40,0.3);}
+.ph-input.ev{background:#ffe0e0;border-color:#ffaaaa;}
+.ph-hint{font-size:11px;font-weight:600;color:rgba(234,249,225,0.35);padding-left:1.5rem;margin-top:-10px;margin-bottom:15px;display:block;}
+
 .op{display:flex;flex-direction:column;gap:15px;margin-bottom:15px;width:100%;}
-.op.slide{animation:sd 0.3s ease;}
-.o{display:flex;align-items:center;background:#EAF9E1;border:none;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
+.op.sUp{animation:sUp 0.3s ease both;}
+.o{display:flex;align-items:center;background:#EAF9E1;border:2px solid transparent;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
+.o:hover{border-color:rgba(8,48,40,0.2);}
 .o:active{transform:scale(0.98);}
-.o.sl{background:#c8e6c0;}
+.o.sl{background:#c8e6c0;border-color:#7bc47f;}
 .o.rv{background:#ffcccc;animation:sh 0.4s ease;}
 .oc{position:absolute;left:6%;width:32px;height:32px;border-radius:50%;border:2px solid #083028;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.o.sl .oc{background:#083028;}
+.o.sl .oc{background:#083028;border-color:#083028;}
 .o.rv .oc{border-color:#cc0000;}
 .ok{width:10px;height:10px;border-radius:50%;background:#EAF9E1;opacity:0;transition:opacity 0.2s;}
 .o.sl .ok{opacity:1;}
 .ot{font-size:20px;font-weight:700;color:#083028;width:100%;text-align:center;padding-left:10%;}
 .o.rv .ot{color:#cc0000;}
-.bn{background:#EAF9E1;color:#083028;border:none;border-radius:60px;width:100%;height:80px;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:transform 0.1s ease;margin-top:5px;display:flex;align-items:center;position:relative;}
+.bn{background:#EAF9E1;color:#083028;border:none;border-radius:60px;width:100%;height:80px;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:5px;display:flex;align-items:center;position:relative;}
+.bn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2);}
 .bn:active{transform:scale(0.98);}
-.bn:disabled{opacity:0.3;cursor:not-allowed;}
+.bn:not(:disabled){animation:pulse 2s infinite;}
+.bn:disabled{opacity:0.3;cursor:not-allowed;animation:none;}
 .bn .ic{position:absolute;left:6%;display:flex;align-items:center;justify-content:center;}
 .bn .tw{flex-grow:1;display:flex;justify-content:center;padding-left:10%;}
-.cb{background:#EAF9E1;width:100%;height:80px;border:none;border-radius:60px;display:flex;align-items:center;text-decoration:none;position:relative;transition:transform 0.1s ease;margin-top:15px;}
+.cb{background:#EAF9E1;width:100%;height:80px;border:none;border-radius:60px;display:flex;align-items:center;text-decoration:none;position:relative;transition:all 0.2s;margin-top:15px;}
+.cb:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2);}
 .cb:active{transform:scale(0.98);}
 .cb .ic{position:absolute;left:6%;display:flex;align-items:center;justify-content:center;}
 .cb .tw{flex-grow:1;display:flex;justify-content:center;padding-left:10%;}
 .cb .bt{color:#083028;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;white-space:nowrap;}
 .mi{fill:#083028;}
-.tl{font-size:13px;font-weight:600;color:rgba(234,249,225,0.6);margin-bottom:6px;padding-left:1.5rem;}
-.or{text-align:center;color:rgba(234,249,225,0.4);font-size:14px;font-weight:600;margin:5px 0;}
-.dg{display:flex;align-items:center;background:#EAF9E1;border:none;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;width:100%;margin-bottom:15px;}
+.or{text-align:center;color:rgba(234,249,225,0.35);font-size:14px;font-weight:600;margin:5px 0;}
+.dg{display:flex;align-items:center;background:#EAF9E1;border:2px solid transparent;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;width:100%;margin-bottom:15px;}
+.dg:hover{border-color:rgba(8,48,40,0.2);}
 .dg:active{transform:scale(0.98);}
-.dg.sl{background:#c8e6c0;}
+.dg.sl{background:#c8e6c0;border-color:#7bc47f;}
 .dg .oc{position:absolute;left:6%;width:32px;height:32px;border-radius:50%;border:2px solid #083028;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
 .dg.sl .oc{background:#083028;}
 .dg .ok{width:10px;height:10px;border-radius:50%;background:#EAF9E1;opacity:0;transition:opacity 0.2s;}
 .dg.sl .ok{opacity:1;}
 .dg .dt{font-size:12px;font-weight:600;color:#083028;line-height:1.4;padding-left:calc(6% + 48px);padding-right:12px;}
 .dg .dt a{color:#083028;text-decoration:underline;}
-.em{color:#ff6b6b;font-size:12px;text-align:center;margin-bottom:10px;display:none;padding:0 10px;}
-.sp{width:32px;height:32px;border:3px solid rgba(234,249,225,0.3);border-top:3px solid #EAF9E1;border-radius:50%;animation:sp 0.8s linear infinite;}
+.em{color:#ff6b6b;font-size:12px;text-align:center;margin-bottom:10px;display:none;padding:0 10px;animation:sUp 0.2s ease both;}
+.sp{width:36px;height:36px;border:3px solid rgba(234,249,225,0.2);border-top:3px solid #EAF9E1;border-radius:50%;animation:sp 0.8s linear infinite;}
 .hidden{display:none;}
 </style>
 </head>
 <body>
 <div class="ht">Ihr Immobilien Partner</div>
+<div class="pb-wrap">
+  <div class="pb-track"><div class="pb-fill" id="pbf" style="width:33%"></div></div>
+  <div class="pb-label" id="pbl">Schritt 1 von 3</div>
+</div>
 <div class="qi" id="cd">
-  <div class="si">
-    <div class="sd ac" id="d1"></div>
-    <div class="sd" id="d2"></div>
-    <div class="sd" id="d3"></div>
-  </div>
   <div id="ct"></div>
 </div>
 <script>
@@ -83,104 +104,160 @@ var CI=p.get('c')||'';
 var cur=0,dgv=false,sent=false;
 var ld={income:'',fn:'',ln:'',phone:'',email:'',contact:'',time:''};
 var fpId='';
+var PREFIX='+49';
+var MIN_DIGITS=10,MAX_DIGITS=14;
 
 function sc(n,v,d){var e=new Date();e.setTime(e.getTime()+(d*24*60*60*1000));document.cookie=n+'='+v+';expires='+e.toUTCString()+';path=/';}
 function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(na)===0)return c.substring(na.length);}return '';}
 function ss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function gs(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
-
 function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-function isPhone(v){return /^[+0-9\s\-()]{6,20}$/.test(v);}
 function isName(v){return /^[a-zA-ZäöüÄÖÜß\s\-']{2,}$/.test(v);}
 
-function dots(){
-  ['d1','d2','d3'].forEach(function(id,i){
-    var d=document.getElementById(id);
-    d.className='sd';
-    if(i<cur)d.classList.add('dn');
-    else if(i===cur)d.classList.add('ac');
+function cleanDigits(v){
+  v=v.replace(/^\+49/,'').replace(/^49/,'').replace(/[^\d]/g,'');
+  return v.substring(0,MAX_DIGITS);
+}
+
+function initPhone(){
+  var wrap=document.getElementById('phwrap');
+  var inp=document.getElementById('ph');
+  if(!wrap||!inp)return;
+
+  inp.addEventListener('focus',function(){wrap.classList.add('active');});
+  inp.addEventListener('blur',function(){if(!inp.value)wrap.classList.remove('active');});
+
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Backspace'&&inp.value==='')e.preventDefault();
+    if(/^[a-zA-Z]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey)e.preventDefault();
+  });
+
+  inp.addEventListener('input',function(){
+    var raw=inp.value;
+    var digits=cleanDigits(raw);
+    inp.value=digits;
+    wrap.classList.toggle('active',digits.length>0);
+    var full=PREFIX+digits;
+    var len=digits.length;
+    inp.classList.toggle('ev',len>0&&len<MIN_DIGITS);
+    if(len>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
+    if(len===0){
+      document.getElementById('ctslide').innerHTML='';
+      document.getElementById('ctslide').classList.add('hidden');
+      document.getElementById('tmslide').innerHTML='';
+      document.getElementById('tmslide').classList.add('hidden');
+      ld.contact='';ld.time='';
+    }
+    ld.phone=len>=MIN_DIGITS?full:'';
+    chk3();
+  });
+
+  inp.addEventListener('paste',function(e){
+    e.preventDefault();
+    var pasted=(e.clipboardData||window.clipboardData).getData('text');
+    var digits=cleanDigits(pasted);
+    inp.value=digits;
+    inp.dispatchEvent(new Event('input'));
   });
 }
 
 function arw(){return '<div class="ic"><svg viewBox="0 0 24 24" width="32" height="32" fill="#083028"><path d="M8 5v14l11-7z"/></svg></div>';}
 function mlico(){return '<svg class="mi" viewBox="0 0 24 24" width="32" height="32"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';}
 
-function render(){
-  dots();dgv=false;
-  var c=document.getElementById('ct');
-  if(cur===0){
-    c.innerHTML='<div class="qu">Wie hoch ist dein monatliches Nettoeinkommen?</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div><button class="bn" id="nb" onclick="hi()" disabled>'+arw()+'<div class="tw">Weiter</div></button>';
-    var inc=document.getElementById('inc');
-    inc.addEventListener('input',function(){document.getElementById('nb').disabled=!this.value||parseInt(this.value)<1;});
-    inc.addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hi();});
-    inc.focus();
-  } else if(cur===1){
-    c.innerHTML='<div class="qu">Wie heißt du?</div><div class="tl">Vorname</div><input class="fi" type="text" id="fn" placeholder="Max" autocomplete="given-name"><div class="tl">Nachname</div><input class="fi" type="text" id="ln" placeholder="Mustermann" autocomplete="family-name"><div class="em" id="er1">Bitte Vor- und Nachname eingeben (nur Buchstaben).</div><button class="bn" id="nb" onclick="hn()" disabled>'+arw()+'<div class="tw">Weiter</div></button>';
-    function chk(){document.getElementById('nb').disabled=!(isName(document.getElementById('fn').value.trim())&&isName(document.getElementById('ln').value.trim()));}
-    document.getElementById('fn').addEventListener('input',chk);
-    document.getElementById('ln').addEventListener('input',chk);
-    document.getElementById('fn').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ln').focus();});
-    document.getElementById('ln').addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hn();});
-    document.getElementById('fn').focus();
-  } else if(cur===2){
-    c.innerHTML=
-      '<div class="qu">Wie können wir dich erreichen?</div>'+
-      '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
-      '<input class="fi" type="tel" id="ph" placeholder="+49 123 456789" autocomplete="tel">'+
-      '<div id="ctslide" class="hidden"></div>'+
-      '<div id="tmslide" class="hidden"></div>'+
-      '<div class="or">oder</div>'+
-      '<div class="tl">E-Mail <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
-      '<input class="fi" type="email" id="em" placeholder="deine@email.de" autocomplete="email">'+
-      '<div class="dg" id="dgbtn" onclick="tgDg()"><div class="oc"><div class="ok"></div></div><div class="dt">Ich stimme der Verarbeitung meiner Daten gemäß der <a href="https://www.ihrimmobilienpartner.com/datenschutz" target="_blank" onclick="event.stopPropagation()">Datenschutzerklärung</a> zu. (Art. 6 Abs. 1 lit. a DSGVO)</div></div>'+
-      '<div class="em" id="er2">Bitte mindestens Telefon oder E-Mail angeben, Zeit wählen und Datenschutz bestätigen.</div>'+
-      '<button class="bn" id="nb" onclick="hs()" disabled>'+arw()+'<div class="tw">Absenden</div></button>';
+function pb(i){
+  var labels=['Schritt 1 von 3','Schritt 2 von 3','Schritt 3 von 3'];
+  var pcts=['33%','66%','100%'];
+  document.getElementById('pbf').style.width=pcts[i];
+  document.getElementById('pbl').textContent=labels[i];
+}
 
-    document.getElementById('ph').addEventListener('input',function(){
-      var v=this.value.trim();
-      if(v.length>2&&!document.getElementById('ctslide').querySelector('.o')){
-        showContactType();
-      }
-      if(v.length===0){
-        document.getElementById('ctslide').innerHTML='';
-        document.getElementById('ctslide').classList.add('hidden');
-        document.getElementById('tmslide').innerHTML='';
-        document.getElementById('tmslide').classList.add('hidden');
-        ld.contact='';ld.time='';
-      }
-      chk3();
-    });
-    document.getElementById('em').addEventListener('input',chk3);
-    document.getElementById('ph').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('em').focus();});
-    document.getElementById('em').addEventListener('keydown',function(e){
-      if(e.key==='Enter'){
-        if(!ld.time&&document.getElementById('ph').value.trim()){shakeTime();return;}
-        if(!document.getElementById('nb').disabled)hs();
-      }
-    });
-    document.getElementById('ph').focus();
+function go(html,fn){
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){
+    old.classList.add('out');
+    setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';pb(cur);if(fn)fn();},200);
+  } else {
+    ct.innerHTML='<div class="step">'+html+'</div>';pb(cur);if(fn)fn();
   }
 }
 
-function showContactType(){
+function render(){
+  dgv=false;
+  if(cur===0){
+    go('<div class="qu">Wie hoch ist dein monatliches Nettoeinkommen?</div><div class="iw"><span class="es">€</span><input class="ei" type="number" id="inc" placeholder="0" min="0"></div><button class="bn" id="nb" onclick="hi()" disabled>'+arw()+'<div class="tw">Weiter</div></button>',
+    function(){
+      var inc=document.getElementById('inc');
+      inc.addEventListener('input',function(){document.getElementById('nb').disabled=!this.value||parseInt(this.value)<1;});
+      inc.addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hi();});
+      inc.focus();
+    });
+  } else if(cur===1){
+    go('<div class="qu">Wie heißt du?</div><div class="tl">Vorname</div><input class="fi" type="text" id="fn" placeholder="Max" autocomplete="given-name"><div class="tl">Nachname</div><input class="fi" type="text" id="ln" placeholder="Mustermann" autocomplete="family-name"><div class="em" id="er1">Bitte Vor- und Nachname eingeben (nur Buchstaben).</div><button class="bn" id="nb" onclick="hn()" disabled>'+arw()+'<div class="tw">Weiter</div></button>',
+    function(){
+      function chk(){document.getElementById('nb').disabled=!(isName(document.getElementById('fn').value.trim())&&isName(document.getElementById('ln').value.trim()));}
+      document.getElementById('fn').addEventListener('input',chk);
+      document.getElementById('ln').addEventListener('input',chk);
+      document.getElementById('fn').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ln').focus();});
+      document.getElementById('ln').addEventListener('keydown',function(e){if(e.key==='Enter'&&!document.getElementById('nb').disabled)hn();});
+      document.getElementById('fn').focus();
+    });
+  } else if(cur===2){
+    go(
+      '<div class="qu">Wie können wir dich erreichen?</div>'+
+      '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
+      '<div class="ph-wrap" id="phwrap">'+
+        '<span class="ph-prefix">+49</span>'+
+        '<input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric">'+
+      '</div>'+
+      '<span class="ph-hint">+49 · max. '+MAX_DIGITS+' Ziffern</span>'+
+      '<div id="ctslide" class="hidden"></div>'+
+      '<div id="tmslide" class="hidden"></div>'+
+      '<div class="or">oder</div>'+
+      '<div class="tl">E-Mail</div>'+
+      '<input class="fi" type="email" id="em" placeholder="deine@email.de" autocomplete="email">'+
+      '<div class="dg" id="dgbtn" onclick="tgDg()"><div class="oc"><div class="ok"></div></div><div class="dt">Ich stimme der Verarbeitung meiner Daten gemäß der <a href="https://www.ihrimmobilienpartner.com/datenschutz" target="_blank" onclick="event.stopPropagation()">Datenschutzerklärung</a> zu. (Art. 6 Abs. 1 lit. a DSGVO)</div></div>'+
+      '<div class="em" id="er2">Bitte E-Mail angeben, Datenschutz bestätigen und bei Anruf Erreichbarkeit wählen.</div>'+
+      '<button class="bn" id="nb" onclick="hs()" disabled>'+arw()+'<div class="tw">Absenden</div></button>',
+    function(){
+      initPhone();
+      document.getElementById('em').addEventListener('input',chk3);
+      document.getElementById('em').addEventListener('keydown',function(e){
+        if(e.key==='Enter'){
+          if(document.getElementById('ph').value.trim()&&ld.contact==='Anruf'&&!ld.time){shakeTime();return;}
+          if(!document.getElementById('nb').disabled)hs();
+        }
+      });
+      document.getElementById('ph').focus();
+    });
+  }
+}
+
+function showCT(){
   var sl=document.getElementById('ctslide');
   sl.classList.remove('hidden');
-  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op slide"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op sUp"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
 }
 
 function selCt(val,i){
   ld.contact=val;
   document.querySelectorAll('#ctslide .o').forEach(function(o){o.classList.remove('sl');});
   document.getElementById('ct'+i).classList.add('sl');
-  showTime();
+  if(val==='Anruf'){
+    showTM();
+  } else {
+    document.getElementById('tmslide').innerHTML='';
+    document.getElementById('tmslide').classList.add('hidden');
+    ld.time='—';
+  }
   chk3();
 }
 
-function showTime(){
+function showTM(){
   var sl=document.getElementById('tmslide');
-  if(sl.querySelector('.o'))return;
   sl.classList.remove('hidden');
-  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wann bist du am besten erreichbar?</div><div class="op slide"><div class="o" id="tm0" onclick="selTm(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="tm1" onclick="selTm(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="tm2" onclick="selTm(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div>';
+  if(sl.querySelector('.o'))return;
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wann bist du am besten erreichbar?</div><div class="op sUp"><div class="o" id="tm0" onclick="selTm(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="tm1" onclick="selTm(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="tm2" onclick="selTm(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div>';
 }
 
 function selTm(val,i){
@@ -193,10 +270,7 @@ function selTm(val,i){
 function shakeTime(){
   var opts=document.querySelectorAll('#tmslide .o');
   if(!opts.length)return;
-  opts.forEach(function(o){
-    o.classList.add('rv');
-    setTimeout(function(){o.classList.remove('rv');},600);
-  });
+  opts.forEach(function(o){o.classList.add('rv');setTimeout(function(){o.classList.remove('rv');},600);});
 }
 
 function tgDg(){
@@ -207,91 +281,86 @@ function tgDg(){
 }
 
 function chk3(){
-  if(!document.getElementById('ph'))return;
-  var phv=document.getElementById('ph').value.trim();
+  if(!document.getElementById('em'))return;
   var emv=document.getElementById('em').value.trim();
-  document.getElementById('ph').classList.toggle('ev',phv.length>2&&!isPhone(phv));
   document.getElementById('em').classList.toggle('ev',emv.length>3&&!isEmail(emv));
-  var hasContact=(isPhone(phv))||(isEmail(emv));
-  var needTime=isPhone(phv);
-  var timeOk=!needTime||(ld.time&&ld.contact);
-  document.getElementById('nb').disabled=!(hasContact&&timeOk&&dgv);
+  var hasPhone=ld.phone.length>0;
+  var phoneReady=!hasPhone||(ld.contact==='Nachricht'||(ld.contact==='Anruf'&&ld.time&&ld.time!=='—'));
+  document.getElementById('nb').disabled=!(isEmail(emv)&&phoneReady&&dgv);
 }
 
-function bl(){
-  sc('iip_blocked','1',3650);
-  ss('iip_blocked','1');
+function bl(reason){
+  sc('iip_blocked','1',3650);ss('iip_blocked','1');
   if(fpId)ss('iip_fp_bl',fpId);
-  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang dauerhaft gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt.</div></div>';
-}
-
-function showDone(){
-  var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(ld.time?' Am besten erreichbar: '+ld.time:''));
-  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
-  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt per: '+ld.contact:'')+(ld.time?'\nAm besten erreichbar: '+ld.time:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
-  var btns='';
-  if(ld.phone)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
-  if(ld.email)btns+='<a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic">'+mlico()+'</div><div class="tw"><span class="bt">E-Mail</span></div></a>';
-  if(!ld.phone&&!ld.email)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
-  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank, '+ld.fn+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
+  var msg=reason||'Du erfüllst leider nicht die Voraussetzungen. Der Zugang wurde dauerhaft gesperrt.';
+  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;"><div style="font-size:64px;">🔒</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Zugang gesperrt</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;max-width:400px;padding:0 20px;font-family:Manrope,sans-serif;">'+msg+'</div></div>';
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';document.getElementById('pbf').style.width='100%';document.getElementById('pbl').textContent='';},200);}
+  else{ct.innerHTML='<div class="step">'+html+'</div>';}
 }
 
 function waiting(){
-  document.getElementById('cd').innerHTML='<div style="text-align:center;padding-top:40px;display:flex;flex-direction:column;align-items:center;gap:20px;"><div class="sp"></div><div style="color:#EAF9E1;font-size:20px;font-weight:800;font-family:Manrope,sans-serif;">Deine Anfrage wird gesendet...</div><div style="color:rgba(234,249,225,0.6);font-size:14px;font-family:Manrope,sans-serif;">Bitte einen Moment warten.</div></div>';
+  var html='<div style="text-align:center;padding-top:40px;display:flex;flex-direction:column;align-items:center;gap:20px;"><div class="sp"></div><div style="color:#EAF9E1;font-size:20px;font-weight:800;font-family:Manrope,sans-serif;">Wird gesendet...</div><div style="color:rgba(234,249,225,0.6);font-size:14px;font-family:Manrope,sans-serif;">Bitte einen Moment warten.</div></div>';
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
+  else{ct.innerHTML='<div class="step">'+html+'</div>';}
+}
+
+function showDone(){
+  var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(ld.time&&ld.time!=='—'?' Am besten erreichbar: '+ld.time:''));
+  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
+  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt: '+ld.contact:'')+(ld.time&&ld.time!=='—'?'\nErreichbar: '+ld.time:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
+  var btns='';
+  if(ld.phone)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
+  btns+='<a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic">'+mlico()+'</div><div class="tw"><span class="bt">E-Mail</span></div></a>';
+  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank'+(ld.fn?', '+ld.fn:'')+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';document.getElementById('pbf').style.width='100%';document.getElementById('pbl').textContent='Fertig!';},200);}
+  else{ct.innerHTML='<div class="step">'+html+'</div>';}
 }
 
 function sendTG(){
   if(!TK||!CI)return Promise.resolve();
-  var txt='🏠 Neue Anfrage!\n\n'+'👤 Name: '+ld.fn+' '+ld.ln+'\n'+'💶 Einkommen: €'+ld.income+(ld.phone?'\n📞 Telefon: '+ld.phone:'')+(ld.email?'\n📧 E-Mail: '+ld.email:'')+(ld.contact?'\n📲 Kontakt per: '+ld.contact:'')+(ld.time?'\n🕐 Erreichbar: '+ld.time:'');
+  var txt='🏠 Neue Anfrage!\n\n👤 '+ld.fn+' '+ld.ln+'\n💶 €'+ld.income+(ld.phone?'\n📞 '+ld.phone:'')+(ld.email?'\n📧 '+ld.email:'')+(ld.contact?'\n📲 '+ld.contact:'')+(ld.time&&ld.time!=='—'?'\n🕐 '+ld.time:'');
   return fetch('https://api.telegram.org/bot'+TK+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CI,text:txt})});
 }
 
 function hi(){
   var v=parseInt(document.getElementById('inc').value);
-  if(!v||v<1600){bl();return;}
+  if(!v||v<1600){bl('Dein monatliches Nettoeinkommen liegt unter dem erforderlichen Minimum. Der Zugang wurde gesperrt.');return;}
   ld.income=v;cur++;render();
 }
 
 function hn(){
-  var f=document.getElementById('fn').value.trim();
-  var l=document.getElementById('ln').value.trim();
+  var f=document.getElementById('fn').value.trim();var l=document.getElementById('ln').value.trim();
   if(!isName(f)||!isName(l)){document.getElementById('er1').style.display='block';return;}
   ld.fn=f;ld.ln=l;cur++;render();
 }
 
 function hs(){
   if(sent)return;
-  var ph=document.getElementById('ph').value.trim();
   var em=document.getElementById('em').value.trim();
-  if(ph&&!isPhone(ph)){document.getElementById('er2').style.display='block';return;}
-  if(em&&!isEmail(em)){document.getElementById('er2').style.display='block';return;}
-  if(!ph&&!em){document.getElementById('er2').style.display='block';return;}
-  if(ph&&(!ld.time||!ld.contact)){
-    shakeTime();
-    document.getElementById('er2').style.display='block';return;
-  }
+  if(!isEmail(em)){document.getElementById('er2').style.display='block';return;}
+  if(ld.phone&&ld.contact==='Anruf'&&(!ld.time||ld.time==='—')){shakeTime();document.getElementById('er2').style.display='block';return;}
   if(!dgv){document.getElementById('er2').style.display='block';return;}
-  ld.phone=ph;ld.email=em;
-  sent=true;
-  ss('iip_sent','1');
-  if(fpId)ss('iip_fp_sent',fpId);
+  ld.email=em;sent=true;
+  ss('iip_sent','1');if(fpId)ss('iip_fp_sent',fpId);
   waiting();
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
 }
 
-FingerprintJS.load().then(function(fp){
-  return fp.get();
-}).then(function(result){
-  fpId=result.visitorId;
-  var blFp=gs('iip_fp_bl');
-  var sentFp=gs('iip_fp_sent');
-  if(blFp&&blFp===fpId){bl();return;}
-  if(sentFp&&sentFp===fpId){showDone();return;}
-  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl();return;}
+FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
+  fpId=r.visitorId;
+  if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
+  if(gs('iip_fp_sent')===fpId){showDone();return;}
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
   if(gs('iip_sent')==='1'){showDone();return;}
   render();
 }).catch(function(){
-  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl();return;}
+  if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
   if(gs('iip_sent')==='1'){showDone();return;}
   render();
 });
