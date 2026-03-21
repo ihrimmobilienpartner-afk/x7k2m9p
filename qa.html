@@ -97,7 +97,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
   <div id="ct"></div>
 </div>
 <script>
-var htC=0,htT=0;
+var htC=0,htT=0,ownerMode=false;
 function htClick(){
   var now=Date.now();
   if(now-htT>2000)htC=0;
@@ -107,6 +107,7 @@ function htClick(){
     var keys=Object.keys(localStorage);
     keys.forEach(function(k){if(k.indexOf('iip')!==-1)localStorage.removeItem(k);});
     document.cookie.split(';').forEach(function(c){document.cookie=c.replace(/^ +/,'').replace(/=.*/,'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/');});
+    ss('iip_owner','1');
     location.reload();
   }
 }
@@ -365,7 +366,8 @@ function hs(){
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
 }
 
-FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
+if(gs('iip_owner')==='1'){render();}
+else{FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
   fpId=r.visitorId;
   if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
   if(gs('iip_fp_sent')===fpId){showDone();return;}
@@ -376,7 +378,7 @@ FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
   if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt.');return;}
   if(gs('iip_sent')==='1'){showDone();return;}
   render();
-});
+});}
 </script>
 </body>
 </html>
