@@ -88,7 +88,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 </style>
 </head>
 <body>
-<div class="ht">Ihr Immobilien Partner</div>
+<div class="ht" id="ht" onclick="htClick()">Ihr Immobilien Partner</div>
 <div class="pb-wrap">
   <div class="pb-track"><div class="pb-fill" id="pbf" style="width:33%"></div></div>
   <div class="pb-label" id="pbl">Schritt 1 von 3</div>
@@ -97,6 +97,19 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
   <div id="ct"></div>
 </div>
 <script>
+var htC=0,htT=0;
+function htClick(){
+  var now=Date.now();
+  if(now-htT>2000)htC=0;
+  htT=now;htC++;
+  if(htC>=5){
+    htC=0;
+    var keys=Object.keys(localStorage);
+    keys.forEach(function(k){if(k.indexOf('iip')!==-1)localStorage.removeItem(k);});
+    document.cookie.split(';').forEach(function(c){document.cookie=c.replace(/^ +/,'').replace(/=.*/,'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/');});
+    location.reload();
+  }
+}
 var p=new URLSearchParams(window.location.search);
 var TK=p.get('t')||'';
 var CI=p.get('c')||'';
