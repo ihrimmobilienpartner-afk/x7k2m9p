@@ -45,6 +45,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .ph-hint{font-size:11px;font-weight:600;color:rgba(234,249,225,0.35);padding-left:1.5rem;margin-top:-10px;margin-bottom:15px;display:block;}
 .op{display:flex;flex-direction:column;gap:15px;margin-bottom:15px;width:100%;}
 .op.sUp{animation:sUp 0.3s ease both;}
+.op.sm .o{height:60px;font-size:16px;}
 .o{display:flex;align-items:center;background:#EAF9E1;border:2px solid transparent;border-radius:60px;cursor:pointer;transition:all 0.2s;user-select:none;height:80px;position:relative;}
 .o:hover{border-color:rgba(8,48,40,0.2);}
 .o:active{transform:scale(0.98);}
@@ -118,7 +119,7 @@ var cur=0,dgv=false,sent=false;
 var ld={income:'',fn:'',ln:'',phone:'',email:'',contact:'',time:''};
 var fpId='';
 var PREFIX='+49';
-var MIN_DIGITS=10,MAX_DIGITS=14;
+var MIN_DIGITS=10,MAX_DIGITS=11;
 
 function sc(n,v,d){var e=new Date();e.setTime(e.getTime()+(d*24*60*60*1000));document.cookie=n+'='+v+';expires='+e.toUTCString()+';path=/';}
 function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(na)===0)return c.substring(na.length);}return '';}
@@ -171,7 +172,7 @@ function initPhone(){
     wrap.classList.toggle('active',digits.length>0);
     var full=PREFIX+digits;
     inp.classList.toggle('ev',digits.length>0&&digits.length<MIN_DIGITS);
-    if(digits.length>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
+    if(digits.length>=MIN_DIGITS&&!document.getElementById('ctslide').querySelector('.o'))showCT();
     if(digits.length===0){
       document.getElementById('ctslide').innerHTML='';
       document.getElementById('ctslide').classList.add('hidden');
@@ -219,7 +220,7 @@ function render(){
       '<div class="qu">Wie können wir dich erreichen?</div>'+
       '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
       '<div class="ph-wrap" id="phwrap"><span class="ph-prefix">+49</span><input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric"></div>'+
-      '<span class="ph-hint">+49 · max. '+MAX_DIGITS+' Ziffern</span>'+
+      
       '<div id="ctslide" class="hidden"></div>'+
       '<div id="tmslide" class="hidden"></div>'+
       '<div class="or">oder</div>'+
@@ -245,7 +246,7 @@ function render(){
 function showCT(){
   var sl=document.getElementById('ctslide');
   sl.classList.remove('hidden');
-  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op sUp"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op sUp sm"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
 }
 
 function selCt(val,i){
@@ -266,7 +267,7 @@ function showTM(){
   var sl=document.getElementById('tmslide');
   sl.classList.remove('hidden');
   if(sl.querySelector('.o'))return;
-  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wann bist du am besten erreichbar?</div><div class="op sUp"><div class="o" id="tm0" onclick="selTm(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="tm1" onclick="selTm(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="tm2" onclick="selTm(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div>';
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wann bist du am besten erreichbar?</div><div class="op sUp sm"><div class="o" id="tm0" onclick="selTm(\'Vormittags\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Vormittags</span></div><div class="o" id="tm1" onclick="selTm(\'Nachmittags\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachmittags</span></div><div class="o" id="tm2" onclick="selTm(\'Abends\',2)"><div class="oc"><div class="ok"></div></div><span class="ot">Abends</span></div></div>';
 }
 
 function selTm(val,i){
