@@ -263,7 +263,16 @@ function render(){
       '<button class="bn" id="nb" onclick="hs()" disabled>'+arw()+'<div class="tw">Absenden</div></button>',
     function(){
       initPhone();
-      document.getElementById('em').addEventListener('input',chk3);
+      document.getElementById('em').addEventListener('keydown',function(e){
+      if(/^[а-яёА-ЯЁ]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey)e.preventDefault();
+    });
+    document.getElementById('em').addEventListener('paste',function(e){
+      e.preventDefault();
+      var txt=(e.clipboardData||window.clipboardData).getData('text');
+      txt=txt.replace(/[а-яёА-ЯЁ]/g,'');
+      document.execCommand('insertText',false,txt);
+    });
+    document.getElementById('em').addEventListener('input',chk3);
       document.getElementById('em').addEventListener('keydown',function(e){
         if(e.key==='Enter'){
           if(ld.phone&&ld.contact==='Anruf'&&!ld.time){shakeTime();return;}
