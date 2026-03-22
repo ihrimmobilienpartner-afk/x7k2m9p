@@ -349,4 +349,87 @@ function bl(reason){
 }
 
 function waiting(){
-  var html='<div style="text-align:center;padding-top:40px;display:flex;flex-direction:column;align-items:center;gap:20px;"><div class="sp"></div><div style="color:#EAF9E1;font-size:20px;font-weight:800;font-family:Manrope,sans-serif;">Wird gesendet...</div><div style="color:rgba(234,24
+  var html='<div style="text-align:center;padding-top:40px;display:flex;flex-direction:column;align-items:center;gap:20px;"><div class="sp"></div><div style="color:#EAF9E1;font-size:20px;font-weight:800;font-family:Manrope,sans-serif;">Wird gesendet...</div><div style="color:rgba(234,249,225,0.6);font-size:14px;font-family:Manrope,sans-serif;">Bitte einen Moment warten.</div></div>';
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
+  else{ct.innerHTML='<div class="step">'+html+'</div>';}
+}
+
+function showDone(){
+  setPb('100%','Fertig!',false);
+  var timeStr=ld.time||'';
+  var wMsg=encodeURIComponent('Hallo! Mein Name ist '+ld.fn+' '+ld.ln+'. Ich interessiere mich für eine Immobilien-Beratung.'+(timeStr?' Am besten erreichbar: '+timeStr:''));
+  var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
+  var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt: '+ld.contact:'')+(timeStr?'\nErreichbar: '+timeStr:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
+  var btns='';
+  if(ld.phone)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
+  btns+='<a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic">'+mlico()+'</div><div class="tw"><span class="bt">E-Mail</span></div></a>';
+  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank'+(ld.fn?', '+ld.fn:'')+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
+  var ct=document.getElementById('ct');
+  var old=ct.firstElementChild;
+  if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
+  else{ct.innerHTML='<div class="step">'+html+'</div>';}
+}
+
+function sendTG(){
+  if(!TK)return Promise.resolve();
+  var timeStr=ld.time||'';
+  var txt='🏠 Neue Anfrage!\n\n👤 '+ld.fn+' '+ld.ln+'\n💶 €'+ld.income+(ld.phone?'\n📞 '+ld.phone:'')+(ld.email?'\n📧 '+ld.email:'')+(ld.contact?'\n📲 '+ld.contact:'')+(timeStr?'\n🕐 '+timeStr:'');
+  function send(id){
+    return fetch('https://api.telegram.org/bot'+TK+'/sendMessage',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:id,text:txt})
+    });
+  }
+  var sends=[send(CI)];
+  if(CI2)sends.push(send(CI2));
+  return Promise.all(sends);
+}
+
+function hi(){
+  var v=parseInt(document.getElementById('inc').value);
+  if(!v||v<1600){bl('Leider erfüllst du die Voraussetzungen für unsere Beratung nicht');return;}
+  ld.income=v;cur++;render();
+}
+
+function hn(){
+  var f=document.getElementById('fn').value.trim();
+  var l=document.getElementById('ln').value.trim();
+  if(!isName(f)||!isName(l)){document.getElementById('er1').style.display='block';return;}
+  ld.fn=f;ld.ln=l;cur++;render();
+}
+
+function hs(){
+  if(sent)return;
+  var em=document.getElementById('em').value.trim();
+  if(!isEmail(em)){document.getElementById('er2').style.display='block';return;}
+  if(ld.phone&&ld.contact==='Anruf'&&!ld.time){shakeTime();document.getElementById('er2').style.display='block';return;}
+  if(!dgv){document.getElementById('er2').style.display='block';return;}
+  ld.email=em;sent=true;
+  ss('iip_sent','1');
+  if(fpId)ss('iip_fp_sent',fpId);
+  waiting();
+  sendTG().then(function(){showDone();}).catch(function(){showDone();});
+}
+
+if(gs('iip_owner')==='1'){
+  render();
+} else {
+  FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
+    fpId=r.visitorId;
+    if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
+    if(gs('iip_fp_sent')===fpId){showDone();return;}
+    if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
+    if(gs('iip_sent')==='1'){showDone();return;}
+    render();
+  }).catch(function(){
+    if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
+    if(gs('iip_sent')==='1'){showDone();return;}
+    render();
+  });
+}
+</script>
+</body>
+</html>
