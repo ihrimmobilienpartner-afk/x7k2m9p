@@ -208,7 +208,7 @@ function initPhone(){
     inp.value=digits;
     wrap.classList.toggle('active',digits.length>0);
     inp.classList.toggle('ev',digits.length>0&&digits.length<MIN_DIGITS);
-    if(digits.length>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
+    if(digits.length>=MIN_DIGITS&&!document.getElementById('ctslide').querySelector('.o'))showCT();
     if(digits.length===0){
       document.getElementById('ctslide').innerHTML='';
       document.getElementById('ctslide').classList.add('hidden');
