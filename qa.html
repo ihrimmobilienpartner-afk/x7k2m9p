@@ -4,21 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ihr Immobilien Partner</title>
-<link rel="preconnect" href="https://wa.me">
-<link rel="dns-prefetch" href="https://wa.me">
-<link rel="preconnect" href="https://web.whatsapp.com">
-<link rel="dns-prefetch" href="https://web.whatsapp.com">
 <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
 @keyframes sp{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 @keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
 @keyframes sIn{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:translateX(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes sOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-60px);}}
 @keyframes sUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(234,249,225,0);}50%{box-shadow:0 0 0 6px rgba(234,249,225,0.15);}}
 *{box-sizing:border-box;margin:0;padding:0;outline:none;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;min-height:100%;background:#14342f;overflow-x:hidden;}
+html{overflow-x:hidden;}body{width:100%;min-height:100%;background:#14342f;}
 body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px 0 40px 0;gap:15px;}
 .ht{color:#EAF9E1;font-size:24px;font-weight:800;margin-bottom:6px;text-align:center;letter-spacing:0.5px;}
 .pb-wrap{width:95%;max-width:500px;margin-bottom:8px;}
@@ -29,6 +26,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .pb-label.red{color:rgba(255,107,107,0.7);}
 .qi{width:95%;max-width:500px;overflow:hidden;}
 .step{animation:sIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both;}
+.step.first{animation:fadeIn 0.35s ease both;}
 .step.out{animation:sOut 0.22s cubic-bezier(0.55,0,1,0.45) both;}
 .qu{font-size:16px;font-weight:700;color:#EAF9E1;line-height:1.5;margin-bottom:1.5rem;text-align:center;padding:0 10px;}
 .iw{position:relative;margin-bottom:15px;width:100%;}
@@ -61,7 +59,6 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .o.sl .ok{opacity:1;}
 .ot{font-size:20px;font-weight:700;color:#083028;width:100%;text-align:center;padding-left:10%;}
 .o.rv .ot{color:#cc0000;}
-#ctslide .o,#tmslide .o{height:64px;}
 .bn{background:#EAF9E1;color:#083028;border:none;border-radius:60px;width:100%;height:80px;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:5px;display:flex;align-items:center;position:relative;}
 .bn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2);}
 .bn:active{transform:scale(0.98);}
@@ -93,7 +90,7 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 </style>
 </head>
 <body>
-<div class="ht" id="ht">Ihr Immobilien Partner</div>
+<div class="ht" id="ht" onclick="htClick()">Ihr Immobilien Partner</div>
 <div class="pb-wrap">
   <div class="pb-track"><div class="pb-fill" id="pbf" style="width:33%"></div></div>
   <div class="pb-label" id="pbl">Schritt 1 von 3</div>
@@ -125,7 +122,7 @@ var CI2=p.get('c2')||'';
 var cur=0,dgv=false,sent=false;
 var ld={income:'',fn:'',ln:'',phone:'',email:'',contact:'',time:''};
 var fpId='';
-var MIN_DIGITS=10,MAX_DIGITS=14;
+var MIN_DIGITS=10,MAX_DIGITS=11;
 
 function sc(n,v,d){var e=new Date();e.setTime(e.getTime()+(d*24*60*60*1000));document.cookie=n+'='+v+';expires='+e.toUTCString()+';path=/';}
 function gc(n){var na=n+'=';var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(na)===0)return c.substring(na.length);}return '';}
@@ -160,7 +157,7 @@ function go(html,fn){
     old.classList.add('out');
     setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';if(fn)fn();},200);
   } else {
-    ct.innerHTML='<div class="step">'+html+'</div>';if(fn)fn();
+    ct.innerHTML='<div class="step first">'+html+'</div>';if(fn)fn();
   }
 }
 
@@ -197,7 +194,7 @@ function initPhone(){
     inp.value=digits;
     wrap.classList.toggle('active',digits.length>0);
     inp.classList.toggle('ev',digits.length>0&&digits.length<MIN_DIGITS);
-    if(digits.length>2&&!document.getElementById('ctslide').querySelector('.o'))showCT();
+    if(digits.length>=MIN_DIGITS&&!document.getElementById('ctslide').querySelector('.o'))showCT(isMobile(digits));
     if(digits.length===0){
       document.getElementById('ctslide').innerHTML='';
       document.getElementById('ctslide').classList.add('hidden');
@@ -246,9 +243,9 @@ function render(){
     setPb('100%','Schritt 3 von 3',false);
     go(
       '<div class="qu">Wie können wir dich erreichen?</div>'+
-      '<div class="tl">Telefon <span style="color:rgba(234,249,225,0.35);font-weight:400;">(optional)</span></div>'+
+      '<div class="tl">Telefon</div>'+
       '<div class="ph-wrap" id="phwrap"><span class="ph-prefix">+49</span><input class="ph-input" type="tel" id="ph" placeholder="151 23456789" inputmode="numeric"></div>'+
-      '<span class="ph-hint">+49 · max. '+MAX_DIGITS+' Ziffern</span>'+
+      
       '<div id="ctslide" class="hidden"></div>'+
       '<div id="tmslide" class="hidden"></div>'+
       '<div class="or">oder</div>'+
@@ -285,10 +282,15 @@ function render(){
   }
 }
 
-function showCT(){
+function isMobile(digits){
+  return /^(15|16|17)/.test(digits);
+}
+
+function showCT(mobile){
   var sl=document.getElementById('ctslide');
   sl.classList.remove('hidden');
-  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op sUp"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div><div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div></div>';
+  var nachricht=mobile!==false?'<div class="o" id="ct1" onclick="selCt(\'Nachricht\',1)"><div class="oc"><div class="ok"></div></div><span class="ot">Nachricht</span></div>':'';
+  sl.innerHTML='<div class="tl" style="margin-top:5px;">Wie sollen wir dich kontaktieren?</div><div class="op sUp"><div class="o" id="ct0" onclick="selCt(\'Anruf\',0)"><div class="oc"><div class="ok"></div></div><span class="ot">Anruf</span></div>'+nachricht+'</div>';
 }
 
 function selCt(val,i){
@@ -368,9 +370,9 @@ function showDone(){
   var eSubj=encodeURIComponent('Anfrage: Immobilien-Beratung');
   var eBody=encodeURIComponent('Hallo,\n\nich interessiere mich für eine persönliche Immobilien-Beratung.\n\nName: '+ld.fn+' '+ld.ln+(ld.phone?'\nTelefon: '+ld.phone:'')+(ld.email?'\nE-Mail: '+ld.email:'')+(ld.contact?'\nKontakt: '+ld.contact:'')+(timeStr?'\nErreichbar: '+timeStr:'')+'\n\nMit freundlichen Grüßen\n'+ld.fn+' '+ld.ln);
   var btns='';
-  if(ld.phone)btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
+  btns+='<a href="https://wa.me/4915174424188?text='+wMsg+'" class="cb" target="_blank"><div class="ic"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="32" height="32"></div><div class="tw"><span class="bt">WhatsApp</span></div></a>';
   btns+='<a href="mailto:ihr.immobilien.partner@gmail.com?subject='+eSubj+'&body='+eBody+'" class="cb"><div class="ic">'+mlico()+'</div><div class="tw"><span class="bt">E-Mail</span></div></a>';
-  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank'+(ld.fn?', '+ld.fn:'')+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns so schnell wie möglich bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
+  var html='<div style="text-align:center;padding-top:20px;display:flex;flex-direction:column;align-items:center;gap:15px;margin-bottom:20px;"><div style="font-size:64px;">✅</div><div style="color:#EAF9E1;font-size:22px;font-weight:800;font-family:Manrope,sans-serif;">Vielen Dank'+(ld.fn?', '+ld.fn:'')+'!</div><div style="color:rgba(234,249,225,0.6);font-size:14px;line-height:1.7;font-family:Manrope,sans-serif;max-width:380px;text-align:center;">Wir melden uns innerhalb von 48 Stunden bei dir.</div></div><div style="display:flex;flex-direction:column;gap:15px;width:100%;">'+btns+'</div>';
   var ct=document.getElementById('ct');
   var old=ct.firstElementChild;
   if(old){old.classList.add('out');setTimeout(function(){ct.innerHTML='<div class="step">'+html+'</div>';},200);}
@@ -414,6 +416,8 @@ function hs(){
   if(!dgv){document.getElementById('er2').style.display='block';return;}
   ld.email=em;sent=true;
   ss('iip_sent','1');
+  ss('iip_fn',ld.fn);
+  ss('iip_ln',ld.ln);
   if(fpId)ss('iip_fp_sent',fpId);
   waiting();
   sendTG().then(function(){showDone();}).catch(function(){showDone();});
@@ -425,13 +429,13 @@ if(gs('iip_owner')==='1'){
   FingerprintJS.load().then(function(fp){return fp.get();}).then(function(r){
     fpId=r.visitorId;
     if(gs('iip_fp_bl')===fpId){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_fp_sent')===fpId){showDone();return;}
+    if(gs('iip_fp_sent')===fpId){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_sent')==='1'){showDone();return;}
+    if(gs('iip_sent')==='1'){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     render();
   }).catch(function(){
     if(gc('iip_blocked')==='1'||gs('iip_blocked')==='1'){bl('Dein Gerät wurde dauerhaft gesperrt');return;}
-    if(gs('iip_sent')==='1'){showDone();return;}
+    if(gs('iip_sent')==='1'){ld.fn=gs('iip_fn');ld.ln=gs('iip_ln');showDone();return;}
     render();
   });
 }
