@@ -23,9 +23,9 @@ body{font-family:'Manrope',sans-serif;display:flex;flex-direction:column;align-i
 .pb-fill.red{background:#ff6b6b;}
 .pb-label{font-size:11px;font-weight:600;color:rgba(234,249,225,0.4);text-align:right;margin-top:4px;letter-spacing:0.06em;}
 .pb-label.red{color:rgba(255,107,107,0.7);}
-.qi{width:95%;max-width:500px;overflow:hidden;}
-.step{animation:sIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both;will-change:opacity;}
-.step.out{animation:sOut 0.22s cubic-bezier(0.55,0,1,0.45) both;}
+.qi{width:95%;max-width:500px;transform:translateZ(0);}
+.step{animation:sIn 0.3s ease both;will-change:opacity;transform:translateZ(0);}
+.step.out{animation:sOut 0.2s ease both;}
 .qu{font-size:16px;font-weight:700;color:#EAF9E1;line-height:1.5;margin-bottom:1.5rem;text-align:center;padding:0 10px;}
 .iw{position:relative;margin-bottom:15px;width:100%;}
 .ei{width:100%;background:#EAF9E1;border:2px solid transparent;border-radius:60px;padding:1rem 1rem 1rem 2.75rem;font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;color:#083028;height:80px;transition:border-color 0.2s;}
@@ -192,8 +192,9 @@ function initPhone(){
     inp.value=digits;
     wrap.classList.toggle('active',digits.length>0);
     inp.classList.toggle('ev',digits.length>0&&digits.length<MIN_DIGITS);
-    if(digits.length>=MIN_DIGITS&&!document.getElementById('ctslide').querySelector('.o'))showCT(isMobile(digits));
-    if(digits.length===0){
+    if(digits.length>=MIN_DIGITS){
+      if(!document.getElementById('ctslide').querySelector('.o'))showCT(isMobile(digits));
+    } else {
       document.getElementById('ctslide').innerHTML='';
       document.getElementById('ctslide').classList.add('hidden');
       document.getElementById('tmslide').innerHTML='';
